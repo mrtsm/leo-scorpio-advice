@@ -377,9 +377,15 @@
       const sign = getZodiacSign(month, day);
       const heading = document.getElementById(headingId);
       const message = document.getElementById(messageId);
-      heading.textContent = `${sign} (${formatMonthDay(month, day)})`;
+      const label = formatMonthDay(month, day);
+      heading.textContent = `${sign} (${label})`;
       const spotlight = signSpotlights[sign] || fallbackLabel;
       message.innerHTML = `<strong>Spotlight:</strong> ${spotlight}`;
+      return { sign, label };
+    }
+
+    function decorateMessage(base, partnerA, partnerB) {
+      return `<strong>${partnerA.sign} + ${partnerB.sign}</strong> — ${base}`;
     }
 
     function updateAdvice() {
@@ -397,14 +403,14 @@
         minute: "2-digit"
       });
 
-      document.getElementById("shared-message").textContent = info.shared;
-      document.getElementById("micro-challenge").textContent = info.challenge;
-      document.getElementById("debrief").textContent = info.debrief;
-
       const partnerA = getPartnerDate("partnerA");
       const partnerB = getPartnerDate("partnerB");
-      updatePartnerCard(partnerA, "partner-a-heading", "partner-a-message", "Bring your steady light today.");
-      updatePartnerCard(partnerB, "partner-b-heading", "partner-b-message", "Stay present and responsive.");
+      const partnerAMeta = updatePartnerCard(partnerA, "partner-a-heading", "partner-a-message", "Bring your steady light today.");
+      const partnerBMeta = updatePartnerCard(partnerB, "partner-b-heading", "partner-b-message", "Stay present and responsive.");
+
+      document.getElementById("shared-message").innerHTML = decorateMessage(info.shared, partnerAMeta, partnerBMeta);
+      document.getElementById("micro-challenge").innerHTML = decorateMessage(info.challenge, partnerAMeta, partnerBMeta);
+      document.getElementById("debrief").innerHTML = decorateMessage(info.debrief, partnerAMeta, partnerBMeta);
     }
 
     updateAdvice();
