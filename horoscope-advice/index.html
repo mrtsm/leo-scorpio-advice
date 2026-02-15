@@ -1,109 +1,164 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Zodiac Day Advice</title>
   <style>
     :root {
       color-scheme: dark;
-      --bg: #0b1021;
-      --panel: #141a35;
+      --bg: #050716;
+      --panel: #10162a;
+      --border: rgba(255, 255, 255, 0.12);
       --accent: #f6c343;
       --accent-2: #ff5f7e;
-      --text: #f8f8ff;
-      --muted: #a3a8c9;
+      --text: #f7f7ff;
+      --muted: #a9b1d6;
+      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
     }
     * {
       box-sizing: border-box;
-      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
     }
     body {
-      background: radial-gradient(circle at top, rgba(255,255,255,0.05), transparent 55%), var(--bg);
-      color: var(--text);
-      min-height: 100vh;
       margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, rgba(255, 255, 255, 0.05), transparent 55%), var(--bg);
+      color: var(--text);
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 32px;
+      padding: 24px;
     }
     main {
-      width: min(900px, 100%);
+      width: min(600px, 100%);
+      height: min(600px, calc(100vh - 48px));
+      max-width: 600px;
+      max-height: 600px;
       background: var(--panel);
-      border-radius: 24px;
-      padding: 32px;
-      box-shadow: 0 25px 60px rgba(5, 7, 15, 0.55);
-      border: 1px solid rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 18px;
+      box-shadow: 0 20px 60px rgba(3, 5, 12, 0.7);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow: hidden;
     }
     header {
       text-align: center;
-      margin-bottom: 32px;
     }
     header h1 {
-      font-size: clamp(2rem, 3vw, 2.8rem);
-      margin-bottom: 8px;
+      margin: 4px 0 0;
+      font-size: 1.6rem;
     }
     header p {
       margin: 0;
       color: var(--muted);
+      font-size: 0.95rem;
     }
     .pill {
       display: inline-flex;
-      padding: 6px 12px;
+      padding: 4px 12px;
       border-radius: 999px;
-      background: rgba(246, 195, 67, 0.15);
+      border: 1px solid rgba(246, 195, 67, 0.5);
       color: var(--accent);
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      font-size: 0.82rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 12px;
+    }
+    .controls label {
+      display: block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 6px;
+      color: var(--muted);
+    }
+    .controls input {
+      width: 100%;
+      padding: 10px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(0, 0, 0, 0.35);
+      color: var(--text);
+    }
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow: hidden;
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 20px;
+      gap: 10px;
+    }
+    .grid.primary {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+    .grid.secondary {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .card {
-      background: rgba(255,255,255,0.02);
-      border: 1px solid rgba(255,255,255,0.06);
-      border-radius: 20px;
-      padding: 20px 22px;
-      position: relative;
-      overflow: hidden;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 14px;
+      min-height: 105px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
     }
-    .card::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      border-radius: inherit;
-      pointer-events: none;
-      border: 1px solid transparent;
+    .card.highlight {
+      grid-column: span 2;
+      background: linear-gradient(135deg, rgba(246, 195, 67, 0.15), rgba(255, 95, 126, 0.12));
+      border-color: rgba(246, 195, 67, 0.4);
     }
     .card h2 {
-      margin: 0 0 6px;
-      font-size: 1.3rem;
+      margin: 0;
+      font-size: 1rem;
     }
     .card p {
       margin: 0;
       color: var(--muted);
-      line-height: 1.5;
+      line-height: 1.4;
+      font-size: 0.95rem;
     }
     .card strong {
       color: var(--accent);
     }
-    .card.scorpio strong {
+    .card[data-sign="partner-b"] strong {
       color: var(--accent-2);
     }
-    .card.highlight {
-      border-color: rgba(246,195,67,0.4);
-      background: linear-gradient(145deg, rgba(246,195,67,0.12), rgba(255,95,126,0.12));
-    }
     footer {
-      margin-top: 32px;
       text-align: center;
+      font-size: 0.78rem;
       color: var(--muted);
-      font-size: 0.9rem;
+    }
+    @media (max-width: 640px) {
+      body {
+        padding: 16px;
+      }
+      main {
+        height: auto;
+        aspect-ratio: 1 / 1;
+      }
+      .grid.primary,
+      .grid.secondary,
+      .card.highlight {
+        grid-template-columns: 1fr;
+        grid-column: span 1;
+      }
     }
   </style>
 </head>
@@ -111,100 +166,167 @@
   <main>
     <header>
       <div class="pill" id="day-pill">Loading day...</div>
-      <h1>Daily Advice for Leo + Scorpio</h1>
-      <p id="date-line">Fetching the stars...</p>
+      <h1>Daily Advice</h1>
+      <p id="date-line">Fetching the constellations...</p>
     </header>
 
-    <section class="grid">
-      <article class="card highlight">
-        <h2>Shared Focus</h2>
-        <p id="shared-message">Checking the constellations...</p>
-      </article>
-      <article class="card leo">
-        <h2>Leo (Aug 4)</h2>
-        <p id="leo-message">Calibrating roar...</p>
-      </article>
-      <article class="card scorpio">
-        <h2>Scorpio (Nov 17)</h2>
-        <p id="scorpio-message">Charging stinger...</p>
-      </article>
+    <section class="controls">
+      <div>
+        <label for="partner-a-date">Partner A birthday</label>
+        <input type="date" id="partner-a-date" name="partner-a-date" />
+      </div>
+      <div>
+        <label for="partner-b-date">Partner B birthday</label>
+        <input type="date" id="partner-b-date" name="partner-b-date" />
+      </div>
     </section>
 
-    <section class="grid" style="margin-top: 24px;">
-      <article class="card">
-        <h2>Micro Challenge</h2>
-        <p id="micro-challenge">Waiting on planetary alignment...</p>
-      </article>
-      <article class="card">
-        <h2>Tonight's Debrief</h2>
-        <p id="debrief">Plotting evening constellations...</p>
-      </article>
+    <section class="content">
+      <div class="grid primary">
+        <article class="card highlight">
+          <h2>Shared Focus</h2>
+          <p id="shared-message">Checking the sky...</p>
+        </article>
+        <article class="card" data-sign="partner-a">
+          <h2 id="partner-a-heading">Partner A</h2>
+          <p id="partner-a-message">Loading message...</p>
+        </article>
+        <article class="card" data-sign="partner-b">
+          <h2 id="partner-b-heading">Partner B</h2>
+          <p id="partner-b-message">Preparing alignment...</p>
+        </article>
+      </div>
+      <div class="grid secondary">
+        <article class="card">
+          <h2>Micro Challenge</h2>
+          <p id="micro-challenge">Awaiting planetary cues...</p>
+        </article>
+        <article class="card">
+          <h2>Tonight's Debrief</h2>
+          <p id="debrief">Plotting evening stars...</p>
+        </article>
+      </div>
     </section>
 
     <footer>
-      Advice resets automatically every midnight based on the current weekday.
+      Defaults to Leo (Aug 4) &amp; Scorpio (Nov 17). Update birthdays to personalize the spotlights.
     </footer>
   </main>
 
   <script>
-    const advice = {
+    const weekdayAdvice = {
       Sunday: {
-        shared: "Keep the day low-friction. Leo brings the spark, Scorpio keeps the plan. Align on one priority before noon so the rest stays calm.",
-        leo: "Let generosity be specific. Offer help with one thing she cares about instead of trying to fix everything.",
-        scorpio: "Signal gratitude early. A quick note or touch resets Leo's energy for the entire day.",
+        shared: "Keep the day low-friction. Align on one priority before noon so everything else stays calm.",
         challenge: "Trade playlists for brunch prep. Each person curates the other's vibe.",
         debrief: "Ask: What tiny luxury should be non-negotiable next Sunday?"
       },
       Monday: {
-        shared: "It's a runway day. Leo can ignite momentum, Scorpio can steer. Decide who owns the kickoff and who cleans up details.",
-        leo: "Delegate instead of muscling through. Your clarity is more valuable than your heroics today.",
-        scorpio: "Share the outline, not just the result. Let her see the gears turning so she feels included.",
+        shared: "It's a runway day. Decide who owns the kickoff and who cleans up details.",
         challenge: "Co-write a three-item mission for the week in ten minutes.",
         debrief: "Rate the mission: too ambitious, safe, or precise? Adjust for Tuesday."
       },
       Tuesday: {
-        shared: "Creative friction works if you name it up front. Call today's experiment an experiment.",
-        leo: "Surprise her with a bold idea, but add one grounding detail so it feels buildable.",
-        scorpio: "Leave room for improv. Say \"yes, and\" once before offering the sober take.",
-        challenge: "Swap roles on a routine task (planning, cooking, messaging).",
+        shared: "Creative friction works if you name it upfront. Call today's experiment an experiment.",
+        challenge: "Swap roles on a routine task like planning, cooking, or messaging.",
         debrief: "What did you learn about the other person's invisible workload?"
       },
       Wednesday: {
-        shared: "Midweek fog lifts with shared rituals. Anchor today with one repeatable habit you both respect.",
-        leo: "Protect your focus block. Tell her when you’re in deep work so she knows the silence is intentional.",
-        scorpio: "Use your pattern radar kindly—spot where she’s overextending and offer cover.",
+        shared: "Midweek fog lifts with shared rituals. Anchor today with one habit you both respect.",
         challenge: "Send each other a mid-afternoon check-in emoji with zero text.",
         debrief: "Did the ritual feel grounding or forced? Keep, tweak, or toss."
       },
       Thursday: {
-        shared: "Today is about momentum math. One of you supplies ambition, the other supplies sequencing. Switch halfway.",
-        leo: "Channel confidence into encouragement. Spotlight one Scorpio win out loud.",
-        scorpio: "Let a secret plan slip in a good way—share something you’re excited about before it’s perfect.",
-        challenge: "Draft a mini weekend teaser (one sentence each) and stick it on the fridge or notes app.",
+        shared: "Today is about momentum math. Swap who supplies ambition and who sequences halfway through.",
+        challenge: "Draft a mini weekend teaser (one sentence each) and pin it somewhere visible.",
         debrief: "Does the teaser still excite you tonight? If not, remix it together."
       },
       Friday: {
         shared: "Treat schedules like clay. Build a flexible outline for the night so spontaneous ideas still have guardrails.",
-        leo: "Bring the sparkle but leave room for her intensity. Offer two adventurous options, not five.",
-        scorpio: "Give a decisive yes/no on plans by early evening so Leo isn't left guessing.",
-        challenge: "Trade compliments that are about effort, not outcomes.",
-        debrief: "What moment felt the most \"us\" today? Capture it for future Fridays."
+        challenge: "Trade compliments that focus on effort, not outcomes.",
+        debrief: "What moment felt the most 'us' today? Capture it for future Fridays."
       },
       Saturday: {
-        shared: "Adventure window open. Leo leads with boldness, Scorpio ensures depth. Mix an outdoor move with a quiet recharge ritual.",
-        leo: "Use your enthusiasm to nudge both of you outside before noon.",
-        scorpio: "Curate the slow-down phase—playlist, candles, cozy lighting. She’ll notice.",
+        shared: "Adventure window open. Mix an outdoor move with a quiet recharge ritual.",
         challenge: "Plan a no-phones hour tailored to what the other person secretly wants.",
         debrief: "Name one tradition you want to protect for future Saturdays."
       }
     };
 
-    const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    const signSpotlights = {
+      Aries: "Lead boldly but leave space for collaboration. Share the spark, not just the outcome.",
+      Taurus: "Slow, steady gestures win today. Offer stability and savor the tactile details.",
+      Gemini: "Use your curiosity as glue—ask a question that keeps the convo looping back to joy.",
+      Cancer: "Bring the emotional thermostat down a notch. Soft reassurance changes the room.",
+      Leo: "Shine with intention. Spotlight your partner's win before roaring about your own.",
+      Virgo: "Aim for elegant structure. A tidy plan or thoughtful edit goes a long way.",
+      Libra: "Diplomacy is your superpower. Curate harmony through little acts of fairness.",
+      Scorpio: "Name the undercurrent kindly. Your depth helps both of you feel seen.",
+      Sagittarius: "Inject adventure into the ordinary. Suggest a micro quest or detour.",
+      Capricorn: "Stack the blocks methodically, then celebrate the progress out loud.",
+      Aquarius: "Offer the out-of-the-box perspective. Your quirk is the missing voltage.",
+      Pisces: "Tune into subtle moods. A poetic or creative nudge re-enchants the day."
+    };
+
+    const defaults = {
+      partnerA: { month: 8, day: 4, value: "1990-08-04" },
+      partnerB: { month: 11, day: 17, value: "1990-11-17" }
+    };
+
+    const inputs = {
+      partnerA: document.getElementById("partner-a-date"),
+      partnerB: document.getElementById("partner-b-date")
+    };
+
+    Object.entries(inputs).forEach(([key, input]) => {
+      if (!input.value) {
+        input.value = defaults[key].value;
+      }
+      input.addEventListener("input", updateAdvice);
+    });
+
+    function parseBirthday(value, fallback) {
+      if (!value) return fallback;
+      const parts = value.split("-").map(Number);
+      if (parts.length < 3 || Number.isNaN(parts[1]) || Number.isNaN(parts[2])) {
+        return fallback;
+      }
+      return { month: parts[1], day: parts[2] };
+    }
+
+    function formatMonthDay(month, day) {
+      const ref = new Date(2020, month - 1, day);
+      return ref.toLocaleString(undefined, { month: "long", day: "numeric" });
+    }
+
+    function getZodiacSign(month, day) {
+      if ((month === 1 && day <= 19) || (month === 12 && day >= 22)) return "Capricorn";
+      if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return "Aquarius";
+      if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return "Pisces";
+      if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return "Aries";
+      if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return "Taurus";
+      if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return "Gemini";
+      if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return "Cancer";
+      if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "Leo";
+      if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "Virgo";
+      if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return "Libra";
+      if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return "Scorpio";
+      return "Sagittarius";
+    }
+
+    function updatePartnerCard({ month, day }, headingId, messageId, fallbackLabel) {
+      const sign = getZodiacSign(month, day);
+      const heading = document.getElementById(headingId);
+      const message = document.getElementById(messageId);
+      heading.textContent = `${sign} (${formatMonthDay(month, day)})`;
+      const spotlight = signSpotlights[sign] || fallbackLabel;
+      message.innerHTML = `<strong>Spotlight:</strong> ${spotlight}`;
+    }
 
     function updateAdvice() {
       const now = new Date();
-      const dayName = dayNames[now.getDay()];
-      const info = advice[dayName];
+      const dayName = now.toLocaleDateString(undefined, { weekday: "long" });
+      const info = weekdayAdvice[dayName];
+
       document.getElementById("day-pill").textContent = `${dayName} Energy`;
       document.getElementById("date-line").textContent = now.toLocaleString(undefined, {
         weekday: "long",
@@ -214,16 +336,19 @@
         hour: "numeric",
         minute: "2-digit"
       });
+
       document.getElementById("shared-message").textContent = info.shared;
-      document.getElementById("leo-message").innerHTML = `<strong>Focus:</strong> ${info.leo}`;
-      document.getElementById("scorpio-message").innerHTML = `<strong>Focus:</strong> ${info.scorpio}`;
       document.getElementById("micro-challenge").textContent = info.challenge;
       document.getElementById("debrief").textContent = info.debrief;
+
+      const partnerA = parseBirthday(inputs.partnerA.value, defaults.partnerA);
+      const partnerB = parseBirthday(inputs.partnerB.value, defaults.partnerB);
+      updatePartnerCard(partnerA, "partner-a-heading", "partner-a-message", "Bring your steady light today.");
+      updatePartnerCard(partnerB, "partner-b-heading", "partner-b-message", "Stay present and responsive.");
     }
 
     updateAdvice();
 
-    // Auto-refresh at midnight local time
     const now = new Date();
     const millisUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) - now;
     setTimeout(() => {
