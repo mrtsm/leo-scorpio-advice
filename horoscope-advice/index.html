@@ -130,6 +130,26 @@
       display: flex;
       flex-direction: column;
       gap: 8px;
+      overflow: hidden;
+    }
+    .card p,
+    .card h2 {
+      transition: transform 0.4s ease, opacity 0.4s ease;
+    }
+    .card-enter {
+      opacity: 0;
+      transform: translateY(8px);
+      animation: fadeSlide 0.35s forwards;
+    }
+    @keyframes fadeSlide {
+      from {
+        opacity: 0;
+        transform: translateY(12px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
     .card.highlight {
       grid-column: span 2;
@@ -378,15 +398,31 @@
       const heading = document.getElementById(headingId);
       const message = document.getElementById(messageId);
       const label = formatMonthDay(month, day);
-      heading.textContent = `${sign} (${label})`;
+      animateSwap(heading, `${sign} (${label})`);
       const spotlight = signSpotlights[sign] || fallbackLabel;
-      message.innerHTML = `<strong>Spotlight:</strong> ${spotlight}`;
+      animateSwap(message, `<strong>Spotlight:</strong> ${spotlight}`);
       return { sign, label };
     }
 
     function decorateMessage(base, partnerA, partnerB) {
       return `<strong>${partnerA.sign} + ${partnerB.sign}</strong> — ${base}`;
     }
+
+    function animateSwap(node, newHTML) {
+      node.classList.add("card-enter");
+      node.setAttribute("data-pending", newHTML);
+    }
+
+    document.addEventListener("animationend", (event) => {
+      if (!event.target.matches(".card-enter")) return;
+      const node = event.target;
+      node.classList.remove("card-enter");
+      const pending = node.getAttribute("data-pending");
+      if (pending !== null) {
+        node.innerHTML = pending;
+        node.removeAttribute("data-pending");
+      }
+    });
 
     function updateAdvice() {
       const now = new Date();
@@ -408,9 +444,9 @@
       const partnerAMeta = updatePartnerCard(partnerA, "partner-a-heading", "partner-a-message", "Bring your steady light today.");
       const partnerBMeta = updatePartnerCard(partnerB, "partner-b-heading", "partner-b-message", "Stay present and responsive.");
 
-      document.getElementById("shared-message").innerHTML = decorateMessage(info.shared, partnerAMeta, partnerBMeta);
-      document.getElementById("micro-challenge").innerHTML = decorateMessage(info.challenge, partnerAMeta, partnerBMeta);
-      document.getElementById("debrief").innerHTML = decorateMessage(info.debrief, partnerAMeta, partnerBMeta);
+      animateSwap(document.getElementById("shared-message"), decorateMessage(info.shared, partnerAMeta, partnerBMeta));
+      animateSwap(document.getElementById("micro-challenge"), decorateMessage(info.challenge, partnerAMeta, partnerBMeta));
+      animateSwap(document.getElementById("debrief"), decorateMessage(info.debrief, partnerAMeta, partnerBMeta));
     }
 
     updateAdvice();
