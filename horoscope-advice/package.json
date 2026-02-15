@@ -1,0 +1,23 @@
+{
+  "name": "horoscope-advice",
+  "version": "1.0.0",
+  "description": "Daily horoscope-inspired advice pairing for Leo (Aug 4) and Scorpio (Nov 17).",
+  "private": true,
+  "scripts": {
+    "dev": "serve -l 4173",
+    "start": "serve -l 4173",
+    "lint": "htmlhint index.html"
+  },
+  "keywords": [
+    "horoscope",
+    "leo",
+    "scorpio",
+    "advice",
+    "relationship"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "htmlhint": "^1.9.1",
+    "serve": "^14.2.5"
+  }
+}

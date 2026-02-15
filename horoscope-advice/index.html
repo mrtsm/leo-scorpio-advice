@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zodiac Day Advice</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1021;
+      --panel: #141a35;
+      --accent: #f6c343;
+      --accent-2: #ff5f7e;
+      --text: #f8f8ff;
+      --muted: #a3a8c9;
+    }
+    * {
+      box-sizing: border-box;
+      font-family: "Inter", "Segoe UI", system-ui, sans-serif;
+    }
+    body {
+      background: radial-gradient(circle at top, rgba(255,255,255,0.05), transparent 55%), var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px;
+    }
+    main {
+      width: min(900px, 100%);
+      background: var(--panel);
+      border-radius: 24px;
+      padding: 32px;
+      box-shadow: 0 25px 60px rgba(5, 7, 15, 0.55);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+    header h1 {
+      font-size: clamp(2rem, 3vw, 2.8rem);
+      margin-bottom: 8px;
+    }
+    header p {
+      margin: 0;
+      color: var(--muted);
+    }
+    .pill {
+      display: inline-flex;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(246, 195, 67, 0.15);
+      color: var(--accent);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    .card {
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 20px;
+      padding: 20px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      pointer-events: none;
+      border: 1px solid transparent;
+    }
+    .card h2 {
+      margin: 0 0 6px;
+      font-size: 1.3rem;
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+    .card strong {
+      color: var(--accent);
+    }
+    .card.scorpio strong {
+      color: var(--accent-2);
+    }
+    .card.highlight {
+      border-color: rgba(246,195,67,0.4);
+      background: linear-gradient(145deg, rgba(246,195,67,0.12), rgba(255,95,126,0.12));
+    }
+    footer {
+      margin-top: 32px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div class="pill" id="day-pill">Loading day...</div>
+      <h1>Daily Advice for Leo + Scorpio</h1>
+      <p id="date-line">Fetching the stars...</p>
+    </header>
+
+    <section class="grid">
+      <article class="card highlight">
+        <h2>Shared Focus</h2>
+        <p id="shared-message">Checking the constellations...</p>
+      </article>
+      <article class="card leo">
+        <h2>Leo (Aug 4)</h2>
+        <p id="leo-message">Calibrating roar...</p>
+      </article>
+      <article class="card scorpio">
+        <h2>Scorpio (Nov 17)</h2>
+        <p id="scorpio-message">Charging stinger...</p>
+      </article>
+    </section>
+
+    <section class="grid" style="margin-top: 24px;">
+      <article class="card">
+        <h2>Micro Challenge</h2>
+        <p id="micro-challenge">Waiting on planetary alignment...</p>
+      </article>
+      <article class="card">
+        <h2>Tonight's Debrief</h2>
+        <p id="debrief">Plotting evening constellations...</p>
+      </article>
+    </section>
+
+    <footer>
+      Advice resets automatically every midnight based on the current weekday.
+    </footer>
+  </main>
+
+  <script>
+    const advice = {
+      Sunday: {
+        shared: "Keep the day low-friction. Leo brings the spark, Scorpio keeps the plan. Align on one priority before noon so the rest stays calm.",
+        leo: "Let generosity be specific. Offer help with one thing she cares about instead of trying to fix everything.",
+        scorpio: "Signal gratitude early. A quick note or touch resets Leo's energy for the entire day.",
+        challenge: "Trade playlists for brunch prep. Each person curates the other's vibe.",
+        debrief: "Ask: What tiny luxury should be non-negotiable next Sunday?"
+      },
+      Monday: {
+        shared: "It's a runway day. Leo can ignite momentum, Scorpio can steer. Decide who owns the kickoff and who cleans up details.",
+        leo: "Delegate instead of muscling through. Your clarity is more valuable than your heroics today.",
+        scorpio: "Share the outline, not just the result. Let her see the gears turning so she feels included.",
+        challenge: "Co-write a three-item mission for the week in ten minutes.",
+        debrief: "Rate the mission: too ambitious, safe, or precise? Adjust for Tuesday."
+      },
+      Tuesday: {
+        shared: "Creative friction works if you name it up front. Call today's experiment an experiment.",
+        leo: "Surprise her with a bold idea, but add one grounding detail so it feels buildable.",
+        scorpio: "Leave room for improv. Say \"yes, and\" once before offering the sober take.",
+        challenge: "Swap roles on a routine task (planning, cooking, messaging).",
+        debrief: "What did you learn about the other person's invisible workload?"
+      },
+      Wednesday: {
+        shared: "Midweek fog lifts with shared rituals. Anchor today with one repeatable habit you both respect.",
+        leo: "Protect your focus block. Tell her when you’re in deep work so she knows the silence is intentional.",
+        scorpio: "Use your pattern radar kindly—spot where she’s overextending and offer cover.",
+        challenge: "Send each other a mid-afternoon check-in emoji with zero text.",
+        debrief: "Did the ritual feel grounding or forced? Keep, tweak, or toss."
+      },
+      Thursday: {
+        shared: "Today is about momentum math. One of you supplies ambition, the other supplies sequencing. Switch halfway.",
+        leo: "Channel confidence into encouragement. Spotlight one Scorpio win out loud.",
+        scorpio: "Let a secret plan slip in a good way—share something you’re excited about before it’s perfect.",
+        challenge: "Draft a mini weekend teaser (one sentence each) and stick it on the fridge or notes app.",
+        debrief: "Does the teaser still excite you tonight? If not, remix it together."
+      },
+      Friday: {
+        shared: "Treat schedules like clay. Build a flexible outline for the night so spontaneous ideas still have guardrails.",
+        leo: "Bring the sparkle but leave room for her intensity. Offer two adventurous options, not five.",
+        scorpio: "Give a decisive yes/no on plans by early evening so Leo isn't left guessing.",
+        challenge: "Trade compliments that are about effort, not outcomes.",
+        debrief: "What moment felt the most \"us\" today? Capture it for future Fridays."
+      },
+      Saturday: {
+        shared: "Adventure window open. Leo leads with boldness, Scorpio ensures depth. Mix an outdoor move with a quiet recharge ritual.",
+        leo: "Use your enthusiasm to nudge both of you outside before noon.",
+        scorpio: "Curate the slow-down phase—playlist, candles, cozy lighting. She’ll notice.",
+        challenge: "Plan a no-phones hour tailored to what the other person secretly wants.",
+        debrief: "Name one tradition you want to protect for future Saturdays."
+      }
+    };
+
+    const dayNames = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+
+    function updateAdvice() {
+      const now = new Date();
+      const dayName = dayNames[now.getDay()];
+      const info = advice[dayName];
+      document.getElementById("day-pill").textContent = `${dayName} Energy`;
+      document.getElementById("date-line").textContent = now.toLocaleString(undefined, {
+        weekday: "long",
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit"
+      });
+      document.getElementById("shared-message").textContent = info.shared;
+      document.getElementById("leo-message").innerHTML = `<strong>Focus:</strong> ${info.leo}`;
+      document.getElementById("scorpio-message").innerHTML = `<strong>Focus:</strong> ${info.scorpio}`;
+      document.getElementById("micro-challenge").textContent = info.challenge;
+      document.getElementById("debrief").textContent = info.debrief;
+    }
+
+    updateAdvice();
+
+    // Auto-refresh at midnight local time
+    const now = new Date();
+    const millisUntilMidnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1) - now;
+    setTimeout(() => {
+      updateAdvice();
+      setInterval(updateAdvice, 24 * 60 * 60 * 1000);
+    }, millisUntilMidnight);
+  </script>
+</body>
+</html>
