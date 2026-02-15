@@ -29,6 +29,13 @@
       justify-content: center;
       padding: 24px;
     }
+    body::after {
+      content: "";
+      display: block;
+      height: 1px;
+      width: 100%;
+      visibility: hidden;
+    }
     main {
       width: min(600px, 100%);
       max-width: 600px;
@@ -183,10 +190,13 @@
     @media (max-width: 640px) {
       body {
         padding: 16px;
+        display: block;
+        min-height: auto;
       }
       main {
         height: auto;
         max-height: none;
+        margin: 0 auto 32px;
       }
       .grid.primary,
       .grid.secondary,
