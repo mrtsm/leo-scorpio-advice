@@ -191,6 +191,12 @@
     .card[data-card].is-active {
       display: flex;
     }
+    .birth-summary {
+      text-align: center;
+      font-size: 0.85rem;
+      letter-spacing: 0.03em;
+      color: var(--muted);
+    }
     .card-hint {
       display: block;
       text-align: center;
@@ -251,7 +257,7 @@
           <p id="debrief">Plotting evening stars...</p>
         </article>
       </div>
-    </section>
+    <div class="birth-summary" id="birth-summary">Leo (Aug 4) • Scorpio (Nov 17)</div>
 
     <div class="card-hint" id="card-hint">Swipe → Next | Swipe ← Back | Tap = Expand</div>
 
@@ -342,6 +348,7 @@
       return map;
     }, {});
     const hintEl = document.getElementById("card-hint");
+    const birthSummaryEl = document.getElementById("birth-summary");
     const bedAudio = document.getElementById("meditation-bed");
 
 
@@ -411,6 +418,11 @@
       return `<strong>${partnerA.sign} + ${partnerB.sign}</strong> — ${base}`;
     }
 
+    function updateBirthSummary(partnerA, partnerB) {
+      if (!birthSummaryEl) return;
+      birthSummaryEl.innerHTML = `${partnerA.sign} (${partnerA.label}) • ${partnerB.sign} (${partnerB.label})`;
+    }
+
     function animateSwap(node, newHTML) {
       node.classList.add("card-enter");
       node.setAttribute("data-pending", newHTML);
@@ -464,6 +476,7 @@
       const partnerB = getPartnerDate("partnerB");
       const partnerAMeta = updatePartnerCard(partnerA, "partner-a-heading", "partner-a-message", "Bring your steady light today.");
       const partnerBMeta = updatePartnerCard(partnerB, "partner-b-heading", "partner-b-message", "Stay present and responsive.");
+      updateBirthSummary(partnerAMeta, partnerBMeta);
 
       animateSwap(document.getElementById("shared-message"), decorateMessage(info.shared, partnerAMeta, partnerBMeta));
       animateSwap(document.getElementById("micro-challenge"), decorateMessage(info.challenge, partnerAMeta, partnerBMeta));
