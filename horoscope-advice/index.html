@@ -513,13 +513,13 @@
       bedAudio.volume = 0.45;
       const resume = () => {
         bedAudio.play().catch(() => {});
-        document.removeEventListener("click", resume);
+        document.removeEventListener("pointerdown", resume);
         document.removeEventListener("keydown", resume);
       };
       const attempt = bedAudio.play();
       if (attempt && attempt.catch) {
         attempt.catch(() => {
-          document.addEventListener("click", resume, { once: true });
+          document.addEventListener("pointerdown", resume, { once: true });
           document.addEventListener("keydown", resume, { once: true });
         });
       }
