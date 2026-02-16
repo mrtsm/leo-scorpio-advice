@@ -359,6 +359,54 @@
       activeCard: stored.activeCard ?? 0
     };
 
+    function daysInMonth(month) {
+      if ([1,3,5,7,8,10,12].includes(month)) return 31;
+      if ([4,6,9,11].includes(month)) return 30;
+      return 29;
+    }
+
+    function populateMonthSelect(select) {
+      select.innerHTML = months
+        .map((label, index) => `<option value="${index + 1}">${label}</option>`)
+        .join("");
+    }
+
+    function populateDaySelect(select, maxDay) {
+      const options = Array.from({ length: maxDay }, (_, i) => i + 1)
+        .map((day) => `<option value="${day}">${day}</option>`)
+        .join("");
+      select.innerHTML = options;
+    }
+
+    function clampDayValue(controlKey) {
+      const { month, day } = controls[controlKey];
+      const selectedMonth = Number(month.value) || defaults[controlKey].month;
+      const max = daysInMonth(selectedMonth);
+      const currentDay = Number(day.value) || defaults[controlKey].day;
+      populateDaySelect(day, max);
+      day.value = String(Math.min(currentDay, max));
+    }
+
+    function initBirthdayControls() {
+      Object.entries(controls).forEach(([key, control]) => {
+        populateMonthSelect(control.month);
+        const saved = storedBirthdays[key] || defaults[key];
+        control.month.value = String(saved.month);
+        clampDayValue(key);
+        control.day.value = String(saved.day);
+
+        control.month.addEventListener("change", () => {
+          clampDayValue(key);
+          updateAdvice();
+          persistState();
+        });
+        control.day.addEventListener("change", () => {
+          updateAdvice();
+          persistState();
+        });
+      });
+    }
+
     function persistState() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify({
         activeCard: uiState.activeCard,
@@ -401,6 +449,33 @@
 
     function updateHintText() {
       hintEl.textContent = "Swipe → Next | Swipe ← Back | Tap = Expand";
+    }
+
+    function getPartnerDate(key) {
+      const month = Number(controls[key].month.value) || defaults[key].month;
+      const maxDay = daysInMonth(month);
+      const day = Math.min(Number(controls[key].day.value) || defaults[key].day, maxDay);
+      return { month, day };
+    }
+
+    function formatMonthDay(month, day) {
+      const ref = new Date(2020, month - 1, day);
+      return ref.toLocaleString(undefined, { month: "long", day: "numeric" });
+    }
+
+    function getZodiacSign(month, day) {
+      if ((month === 1 && day <= 19) || (month === 12 && day >= 22)) return "Capricorn";
+      if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return "Aquarius";
+      if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return "Pisces";
+      if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return "Aries";
+      if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return "Taurus";
+      if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return "Gemini";
+      if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return "Cancer";
+      if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return "Leo";
+      if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return "Virgo";
+      if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return "Libra";
+      if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return "Scorpio";
+      return "Sagittarius";
     }
 
     function updatePartnerCard({ month, day }, headingId, messageId, fallbackLabel) {
@@ -485,6 +560,7 @@
 
     document.addEventListener("keydown", handleKeyNav);
 
+    initBirthdayControls();
     applyCardState();
     updateAdvice();
     persistState();
