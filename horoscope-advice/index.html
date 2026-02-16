@@ -353,7 +353,12 @@
 
 
     const STORAGE_KEY = "leo-scorpio-glasses";
-    const stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    let stored = {};
+    try {
+      stored = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    } catch (err) {
+      stored = {};
+    }
     const storedBirthdays = stored.birthdays || {};
     const uiState = {
       activeCard: stored.activeCard ?? 0
